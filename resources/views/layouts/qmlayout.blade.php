@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<!-- include header here -->
+@include('includes.header')
+<body>
+    <div class="wrapper">
+        <!-- include Sidebar Here -->
+		@include('includes.sidebar')
+        <div class="main-panel">
+            <!-- Include nav Here -->
+			@include('includes.nav')
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        @yield('content')
+                    </div>
+                </div>
+            </div>
+			@include('includes.footer')
