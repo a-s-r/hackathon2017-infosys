@@ -25,7 +25,7 @@ class ManageHallController extends Controller
 
         if ($validator->fails()) {
             return redirect('manage-hall/add')
-                        ->withErrors($validator,'addHall');
+                        ->withInput()->withErrors($validator,'addHall');
         }
 		$halls = new Halls;
 		$halls->name = $request->input('hall_name');
@@ -46,6 +46,7 @@ class ManageHallController extends Controller
 	}
 	
 	public function update(Request $request){
+		$id = $request->input('id');
 		$validator = Validator::make($request->all(), [
             'hall_name' => 'required|max:30',
 			'capacity' => 'required|max:5',
@@ -53,11 +54,10 @@ class ManageHallController extends Controller
 
         if ($validator->fails()) {
             return redirect('manage-hall/edit/'.$id)
-                        ->withErrors($validator,'addHall');
+                        ->withInput()->withErrors($validator,'addHall');
         }
 		
 		$halls = new Halls;
-		$id = $request->input('id');
 		$name = $request->input('hall_name');
 		$capacity = $request->input('capacity');
 		

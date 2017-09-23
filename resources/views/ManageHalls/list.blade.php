@@ -34,7 +34,7 @@
 								<td>{{ date('d-M-y',strtotime($hall->created_at))}}</td>
 								<td class="text-primary">
 									<a href="/manage-hall/edit/{{$hall->id}}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-									&nbsp; &nbsp;<a href="/manage-hall/delete/{{$hall->id}}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+									&nbsp; &nbsp;<a onclick="return confirm('Are you sure want to delete?')" href="/manage-hall/delete/{{$hall->id}}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
 								</td>
 							</tr>
 						@endforeach

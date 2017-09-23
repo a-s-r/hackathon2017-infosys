@@ -27,6 +27,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/manage-patient', 'ManagePatientController@index')->name('home');
 Route::get('/manage-patient/add', 'ManagePatientController@add')->name('home');
+Route::post('/manage-patient/save', 'ManagePatientController@save');
 
 // Routing for the Manage Halls
 Route::get('/manage-hall','ManageHallController@index');
