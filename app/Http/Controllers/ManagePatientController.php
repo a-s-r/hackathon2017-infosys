@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\Auth;
 use App\Departments;
 use App\Doctors;
 use App\Halls;
@@ -14,6 +14,10 @@ use Twilio;
 
 class ManagePatientController extends Controller
 {
+	public function __construct(){
+		$this->middleware('auth');
+	}
+	
     public function index(){
 		$title = "Patients List";
 		$patients = Patients::getAllPatients();
@@ -26,6 +30,15 @@ class ManagePatientController extends Controller
 		$halls = Halls::all();
 		$patients = Patients::all();
 		return view('ManagePatients.addPatient',['departments'=>$departments,'doctors'=>$doctors,'halls'=>$halls,'patients'=>$patients]);
+	}
+	
+	public function edit($id){
+		$title = "Edit Patient";
+		$departments = Departments::all();
+		$doctors = Doctors::all();
+		$halls = Halls::all();
+		$patients = Patients::find($id);
+		return view('ManagePatients.editPatient',['departments'=>$departments,'title'=>$title,'doctors'=>$doctors,'halls'=>$halls,'patients'=>$patients]);
 	}
 	
 	public function save(Request $request){

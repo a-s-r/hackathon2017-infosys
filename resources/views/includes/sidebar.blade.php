@@ -1,7 +1,7 @@
 <div class="sidebar" data-color="purple" data-image="../assets/img/sidebar-1.jpg">
             <div class="logo">
                 <a href="http://www.creative-tim.com" class="simple-text">
-                    QMDemo
+                    HQMS
                 </a>
             </div>
             <div class="sidebar-wrapper">

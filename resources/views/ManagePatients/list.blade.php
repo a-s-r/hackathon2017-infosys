@@ -45,8 +45,8 @@
 							<td>{{ $patient->doctor_phone }}</td>
 							<td>{{ $patient->patient_register_date }}</td>
 							<td>
-								<a href=""><i class="fa fa-pencil" aria-hidden="true"></i></a>
-								&nbsp; &nbsp;<a href=""><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+								<a title="Re-Visit" href="/manage-patient/edit/{{ $patient->pid }}"><i class="fa fa-repeat" aria-hidden="true"></i></a>
+								&nbsp; &nbsp;<a href="/manage-patient/delete/{{ $patient->pid }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
 							</td>
 						</tr>
 					@endforeach

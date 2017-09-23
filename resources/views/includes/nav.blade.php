@@ -42,9 +42,8 @@
                                 </ul>
                             </li>-->
                             <li>
-                                <a href="/logout" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="material-icons">person</i>
-                                    <p class="hidden-lg hidden-md">Profile</p>
+                                <a href="/logout" class="dropdown-toggle">
+                                    Logout
                                 </a>
                             </li>
                         </ul>
