@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 class Patients extends Model
 {
+
 	protected $table = 'patients';
 	public $fillable = ['name','department_id','doctor_id','age','address','hall_id','phone','phone','email','crno','token','queue_status','device_id'];
 	
@@ -22,4 +23,34 @@ class Patients extends Model
 		$data = DB::select(DB::raw('SELECT * FROM patients where id=(select max(id) from patients where doctor_id='.$doctorId.' and department_id='.$departmentId.' and created_at like "%'.date('Y-m-d').'%")'));
 		return $data;
 	}
+
+    public static function getPatientFromCrno($crno){
+        return Patients::where('crno', $crno)->first();  
+    }
+
+    public static function updateDeviceId($crno, $device_id){
+        return Patients::where('crno', $crno)->update(['device_id' => $device_id]);
+    }
+    
+    public static function isValidCrno($crno){
+        return Patients::where('crno', $crno)->first();
+    }
+
+    public static function allTokens($department_id, $doctor_id){
+        $current_date   =  date('Y-m-d');
+        return Patients::where('department_id', $department_id)
+                            ->where('doctor_id', $doctor_id)
+                            ->where('created_at', 'like', $current_date.'%')
+                            ->count();
+    }
+
+    public static function activeTokens($department_id, $doctor_id){
+        $current_date   =  date('Y-m-d');
+        return Patients::where('department_id', $department_id)
+                            ->where('doctor_id', $doctor_id)
+                            ->where('queue_status', 1)
+                            ->where('created_at', 'like', $current_date.'%')
+                            ->count();
+    }
+
 }

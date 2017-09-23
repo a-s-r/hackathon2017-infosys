@@ -19,12 +19,14 @@ class CreatePatientsTable extends Migration
             $table->integer('department_id');
             $table->integer('doctor_id');
             $table->integer('hall_id');
+            $table->integer('age');
+            $table->text('address')->nullable();
             $table->string('phone');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('crno');
             $table->integer('token');
             $table->integer('queue_status');
-            $table->longText('device_id');
+            $table->longText('device_id')->nullable();
             $table->timestamps();
         });
     }

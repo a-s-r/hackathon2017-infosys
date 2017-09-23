@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+
 use App\Departments;
 use App\Doctors;
 use App\Halls;
 use App\Patients;
 use App\User;
 use Twilio;
+
 class ManagePatientController extends Controller
 {
     public function index(){
@@ -84,6 +86,31 @@ class ManagePatientController extends Controller
 		}
 	}
 
+	public function getPatientFromCrno($crno){
+		return Patients::getPatientFromCrno($crno);
+	}
+
+	public function updateDeviceId($crno, $device_id){
+		return Patients::updateDeviceId($crno, $device_id);
+	}
+
+	public function allTokenStatus($department_id, $doctor_id){
+		//total number of tokens
+		$total	=	Patients::allTokens($department_id, $doctor_id);
+			
+		//active token
+		$active_tokens	=	Patients::activeTokens($department_id, $doctor_id);
+
+		//current token
+		$current_token	=	$active_tokens	+	1;
+
+		//merge and return
+		$merge	=	['total'=>$total, 'active'=>$active_tokens, 'current'=>$current_token];
+		
+		return $merge;
+	}
+
+
 	public function patientData($crno, $device_id){
 		/*
 		Default Json View
@@ -106,7 +133,31 @@ class ManagePatientController extends Controller
 			}
 		}
 		*/
-		return response()->json(['status' => true, 'data' => []]);
+
+		//get device_id and crno
+		//Check CR No is valid or not
+		$isValidCrno	=	Patients::isValidCrno($crno);
+		if(!$isValidCrno){
+			//if not valid then
+			return response()->json(['status' => false, 'data' => []]);
+		}else{
+			//else
+			//update device_id
+			$this->updateDeviceId($crno, $device_id);
+			
+			//get patient record
+			$patientData	=	$this->getPatientFromCrno($crno);
+			$department_id	=	$patientData->department_id;
+			$doctor_id		=	$patientData->doctor_id;
+			
+			//get token status
+			$tokenStatus	=	$this->allTokenStatus($department_id, $doctor_id);
+
+			//format data according to response
+			
+			// reponse in json
+			return response()->json(['status' => true, 'data' => []]);
+		}
 	}
 
 	public function isDoctorValid($doctor_phone){
