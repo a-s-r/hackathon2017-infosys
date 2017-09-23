@@ -27,3 +27,11 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/manage-patient', 'ManagePatientController@index')->name('home');
 Route::get('/manage-patient/add', 'ManagePatientController@add')->name('home');
+
+// Routing for the Manage Halls
+Route::get('/manage-hall','ManageHallController@index');
+Route::get('/manage-hall/add','ManageHallController@add');
+Route::post('/manage-hall/save','ManageHallController@save');
+Route::get('/manage-hall/edit/{id}','ManageHallController@edit');
+Route::post('/manage-hall/update/','ManageHallController@update');
+Route::get('/manage-hall/delete/{id}','ManageHallController@deleteHall');

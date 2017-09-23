@@ -36,6 +36,12 @@
                             <p>Register Patient</p>
                         </a>
                     </li>
+					<li class="@if(Route::getCurrentRoute()->getActionName()=='App\Http\Controllers\ManageHallController@index' || Route::getCurrentRoute()->getActionName()=='App\Http\Controllers\ManageHallController@add') active @endif">
+                        <a href="/manage-hall/">
+                            <i class="material-icons">unarchive</i>
+                            <p>Manage Halls</p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
