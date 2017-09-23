@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Patients;
+
 class ManagePatientController extends Controller
 {
     public function index(){
@@ -14,6 +16,15 @@ class ManagePatientController extends Controller
 	public function add(){
 		return view('ManagePatients.addPatient');
 	}
+
+	public function getPatientFromCrno($crno){
+		return Patients::getPatientFromCrno($crno);
+	}
+
+	public function updateDeviceId($crno, $device_id){
+		return Patients::updateDeviceId($crno, $device_id);
+	}
+
 
 	public function patientData($crno, $device_id){
 		/*
@@ -37,6 +48,20 @@ class ManagePatientController extends Controller
 			}
 		}
 		*/
+
+		//get device_id and crno
+		//Check CR No is valid or not
+		//if no then
+			//return response()->json(['status' => false, 'data' => []]);
+		//if yes
+		//update device_id
+			$this->updateDeviceId($crno, $device_id);
+		//get patient record
+			$patientData	=	$this->getPatientFromCrno($crno);
+		dd($patientData->name);
+		//get token status
+
+
 		return response()->json(['status' => true, 'data' => []]);
 	}
 
