@@ -41,6 +41,22 @@ class ManagePatientController extends Controller
 		return Patients::updateDeviceId($crno, $device_id);
 	}
 
+	public function allTokenStatus($department_id, $doctor_id){
+		//total number of tokens
+		$total	=	Patients::allTokens($department_id, $doctor_id);
+			
+		//active token
+		$active_tokens	=	Patients::activeTokens($department_id, $doctor_id);
+
+		//current token
+		$current_token	=	$active_tokens	+	1;
+
+		//merge and return
+		$merge	=	['total'=>$total, 'active'=>$active_tokens, 'current'=>$current_token];
+		
+		return $merge;
+	}
+
 
 	public function patientData($crno, $device_id){
 		/*
@@ -67,18 +83,28 @@ class ManagePatientController extends Controller
 
 		//get device_id and crno
 		//Check CR No is valid or not
-		//if no then
-			//return response()->json(['status' => false, 'data' => []]);
-		//if yes
-		//update device_id
+		$isValidCrno	=	Patients::isValidCrno($crno);
+		if(!$isValidCrno){
+			//if not valid then
+			return response()->json(['status' => false, 'data' => []]);
+		}else{
+			//else
+			//update device_id
 			$this->updateDeviceId($crno, $device_id);
-		//get patient record
+			
+			//get patient record
 			$patientData	=	$this->getPatientFromCrno($crno);
-		dd($patientData->name);
-		//get token status
+			$department_id	=	$patientData->department_id;
+			$doctor_id		=	$patientData->doctor_id;
+			
+			//get token status
+			$tokenStatus	=	$this->allTokenStatus($department_id, $doctor_id);
 
-
-		return response()->json(['status' => true, 'data' => []]);
+			//format data according to response
+			
+			// reponse in json
+			return response()->json(['status' => true, 'data' => []]);
+		}
 	}
 
 	public function isDoctorValid($doctor_phone){
