@@ -21,12 +21,10 @@ Route::get('/logout', function(){
 	return redirect('/');
 });
 
-Route::get('/patient-status', function(){
-    return response()->json(['name' => 'Abigail', 'state' => 'CA']);
-});
 Auth::routes();
 
 Route::get('/home', 'ManagePatientController@index')->name('home');
+
 Route::get('/manage-patient', 'ManagePatientController@index')->name('home');
 Route::get('/manage-patient/add', 'ManagePatientController@add')->name('home');
 Route::get('/manage-patient/get-doctors/{id}', 'ManagePatientController@getDoctorsByDepartment')->name('home');
