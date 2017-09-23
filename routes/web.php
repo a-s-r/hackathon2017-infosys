@@ -42,3 +42,9 @@ Route::get('/manage-hall/delete/{id}','ManageHallController@deleteHall');
 */
 
 Route::get('/get-patient/{crno}/{device_id}', 'ManagePatientController@patientData');
+Route::get('/is-doctor-valid/{doctor_phone}', 'ManagePatientController@isDoctorValid');
+Route::get('/token-status/{doctor_phone}', 'ManagePatientController@tokenStatus');
+
+/*
+    End API's
+*/
