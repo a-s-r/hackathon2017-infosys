@@ -57,10 +57,12 @@ class ManagePatientController extends Controller
 		return $merge;
 	}
 
+	/*
+		patientData API Default Json View
 
-	public function patientData($crno, $device_id){
-		/*
-		Default Json View
+		we get device_id and crno
+
+		and response will be
 
 		{
 			"status": true,
@@ -79,8 +81,9 @@ class ManagePatientController extends Controller
 				"token_total": 10
 			}
 		}
-		*/
+	*/
 
+	public function patientData($crno, $device_id){
 		//get device_id and crno
 		//Check CR No is valid or not
 		$isValidCrno	=	Patients::isValidCrno($crno);
@@ -101,7 +104,27 @@ class ManagePatientController extends Controller
 			$tokenStatus	=	$this->allTokenStatus($department_id, $doctor_id);
 
 			//format data according to response
+			//$get_department	=	
+			$format	=	[
+				"status"=> true,
+				"data"=> [
+					"patient_name" => $patientData->name,
+					"department" => $department_id,
+					"floor" => $patientData->name,
+					"room_number" => $patientData->name,
+					"doctor_name" => $doctor_id,
+					"patient_phone" => $patientData->phone,
+					"patient_email" => $patientData->email,
+					"crno" => $patientData->crno,
+					"waiting_hall" => $patientData->hall_id,
+					"patient_token" => $patientData->token,
+					"token_status" => $tokenStatus['current'],
+					"token_total" => $tokenStatus['total']
+				]
+			];
 			
+			dd($format);
+
 			// reponse in json
 			return response()->json(['status' => true, 'data' => []]);
 		}

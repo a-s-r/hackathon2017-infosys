@@ -19,12 +19,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/patient-status', function(){
-    return response()->json(['name' => 'Abigail', 'state' => 'CA']);
-});
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/manage-patient', 'ManagePatientController@index')->name('home');
 Route::get('/manage-patient/add', 'ManagePatientController@add')->name('home');
 Route::post('/manage-patient/save', 'ManagePatientController@save');
