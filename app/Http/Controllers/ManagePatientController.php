@@ -5,32 +5,85 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+use App\Departments;
+use App\Doctors;
+use App\Halls;
 use App\Patients;
+use App\User;
+use Twilio;
 
 class ManagePatientController extends Controller
 {
     public function index(){
 		$title = "Patients List";
-		return view('ManagePatients.list')->with('title',$title);
+		$patients = Patients::getAllPatients();
+		return view('ManagePatients.list')->with('title',$title)->with('patients',$patients);
 	}
 	
 	public function add(){
-		return view('ManagePatients.addPatient');
+		$departments = Departments::all();
+		$doctors = Doctors::all();
+		$halls = Halls::all();
+		$patients = Patients::all();
+		return view('ManagePatients.addPatient',['departments'=>$departments,'doctors'=>$doctors,'halls'=>$halls,'patients'=>$patients]);
 	}
 	
 	public function save(Request $request){
 		$validator = Validator::make($request->all(), [
             'name' => 'required|max:30',
 			'phone' => 'required|unique:patients|max:10',
-			'email' => 'required|email|unique:patients',
+			'age' => 'required',
+			//'email' => 'required|email|unique:patients',
 			'hall' => 'required',
 			'department' => 'required',
+			'doctor' => 'required'
         ]);
-
         if ($validator->fails()) {
             return redirect('manage-patient/add/')
                         ->withInput()->withErrors($validator,'patient');
         }
+		
+		$patient = new Patients;
+		$patient->name = $request->input('name');
+		$patient->phone = $request->input('phone');
+		$patient->email = $request->input('email');
+		$patient->hall_id = $request->input('hall');
+		$patient->department_id = $request->input('department');
+		$patient->doctor_id = $request->input('doctor');
+		$patient->age = $request->input('age');
+		$patient->address = $request->input('address');
+		
+		$token = $this->createToken($request->input('doctor'),$request->input('department'));
+		$crno = time();
+		$insert = $patient->save();
+		if($insert){
+			Twilio::message("+918219452232","You are registered successfully. Your token is ".$token.". CRNO is ".$crno."");
+			$request->session()->flash('alert-success',"Patient Registration Form Saved Successfully");
+			return redirect('/manage-patient');
+		}else{
+			$request->session()->flash('alert-success',"Something going wrong. Please try again later.");
+			return redirect('/manage-patient');
+		}	
+	}
+	
+	private function createToken($token,$departmentId){
+		// Get the Last Number of the token created in the database for the particular doctor
+		$tokensInfo = Patients::getInfoOfToken($token,$departmentId);
+		if(!empty($tokensInfo) && !empty($tokenInfo[0]['token'])){
+			$token = $token+1;
+		}else{
+			$token = 1;
+		}
+		return $token;
+	}
+	
+	public function getDoctorsByDepartment($id){
+		$data = Doctors::where('department_id', '=', $id)->get();
+		if($data){
+			echo json_encode(['status' => true, 'data' => $data]);
+		}else{
+			return response()->json(['status' => false]);
+		}
 	}
 
 	public function getPatientFromCrno($crno){
