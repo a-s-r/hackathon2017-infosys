@@ -12,19 +12,24 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
+});
+
+
+Route::get('/logout', function(){
+	Auth::logout();
+	return redirect('/');
 });
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
+Route::get('/home', 'ManagePatientController@index')->name('home');
 
 Route::get('/manage-patient', 'ManagePatientController@index')->name('home');
 Route::get('/manage-patient/add', 'ManagePatientController@add')->name('home');
 Route::get('/manage-patient/get-doctors/{id}', 'ManagePatientController@getDoctorsByDepartment')->name('home');
 Route::post('/manage-patient/save', 'ManagePatientController@save');
+Route::get('/manage-patient/edit/{id}', 'ManagePatientController@edit');
 
 // Routing for the Manage Halls
 Route::get('/manage-hall','ManageHallController@index');

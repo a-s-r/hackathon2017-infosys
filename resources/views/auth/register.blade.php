@@ -1,5 +1,12 @@
-@extends('layouts.app')
-
+@extends('layouts.qmfront')
+<style>
+	.main-panel {
+		position: none !important;
+		float: none !important;
+		width: auto !important
+	}
+	.panel-heading{background-color:#9c27b0 !important;color:#fff !important;font-weight:bold;}
+</style>
 @section('content')
 <div class="container">
     <div class="row">
@@ -62,11 +69,17 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
+                            <div class="col-md-offset-5 col-md-6">
                                 <button type="submit" class="btn btn-primary">
                                     Register
                                 </button>
                             </div>
+							<div class="col-md-offset-4 col-md-6">
+                               Already Registered <a class="" href="/login">Click Here to Login</a>
+                            </div>
+                        </div>
+						<div class="form-group">
+							
                         </div>
                     </form>
                 </div>
