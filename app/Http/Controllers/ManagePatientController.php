@@ -157,29 +157,33 @@ class ManagePatientController extends Controller
 			$tokenStatus	=	$this->allTokenStatus($department_id, $doctor_id);
 
 			//format data according to response
-			//$get_department	=	
+			$get_department	=	Departments::find($department_id);
+			$get_doctor	=	Doctors::find($doctor_id);
+			$get_hall	=	Halls::find($patientData->hall_id);
+			
 			$format	=	[
 				"status"=> true,
 				"data"=> [
 					"patient_name" => $patientData->name,
-					"department" => $department_id,
-					"floor" => $patientData->name,
-					"room_number" => $patientData->name,
-					"doctor_name" => $doctor_id,
+					"department" => $get_department->name,
+					"floor" => $get_department->floor,
+					"room_number" => $get_department->room_no,
+					"doctor_name" => $get_doctor->name,
 					"patient_phone" => $patientData->phone,
 					"patient_email" => $patientData->email,
 					"crno" => $patientData->crno,
-					"waiting_hall" => $patientData->hall_id,
+					"waiting_hall" => $get_hall->name,
 					"patient_token" => $patientData->token,
 					"token_status" => $tokenStatus['current'],
 					"token_total" => $tokenStatus['total']
 				]
 			];
 			
-			dd($format);
+			// print final output
+			// dd($format);
 
 			// reponse in json
-			return response()->json(['status' => true, 'data' => []]);
+			return response()->json($format);
 		}
 	}
 
