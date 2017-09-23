@@ -35,3 +35,9 @@ Route::post('/manage-hall/save','ManageHallController@save');
 Route::get('/manage-hall/edit/{id}','ManageHallController@edit');
 Route::post('/manage-hall/update/','ManageHallController@update');
 Route::get('/manage-hall/delete/{id}','ManageHallController@deleteHall');
+
+/*
+    API's
+*/
+
+Route::get('/get-patient/{crno}/{device_id}', 'ManagePatientController@patientData');
