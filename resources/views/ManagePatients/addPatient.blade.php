@@ -7,107 +7,56 @@
 			<p class="category">Add Patient Registration</p>
 		</div>
 		<div class="card-content">
-			<form>
+			<form name="addPatientForm" method="post" action="/manage-patient/save">
 				<div class="row">
+					{{ csrf_field() }}
 					<div class="col-md-5">
 						<div class="form-group label-floating">
 							<label class="control-label">Patient Name</label>
-							<input type="text" class="form-control">
+							<input type="text" name="name" value="{{ old('name') }}" class="form-control">
+							<span class="has-error">{{ $errors->patient->first('name') }}</span>
 						</div>
 					</div>
 					<div class="col-md-3">
 						<div class="form-group label-floating">
 							<label class="control-label">Contact Number</label>
-							<input type="text" class="form-control">
+							<input type="text" name="phone" value="{{ old('phone') }}" class="form-control">
+							<span class="has-error">{{ $errors->patient->first('phone') }}</span>
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group label-floating">
 							<label class="control-label">Email address</label>
-							<input type="email" class="form-control">
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<div class="form-group label-floating">
-							<label class="control-label">Adress</label>
-							<input type="text" class="form-control">
+							<input type="email" name="email" value="{{ old('email') }}" class="form-control">
+							<span class="has-error">{{ $errors->patient->first('email') }}</span>
 						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-4">
 						<div class="form-group label-floating">
-							<label class="control-label">City</label>
-							<input type="text" class="form-control">
+							<label class="control-label">Hall</label>
+							<select name="hall" value="{{ old('hall') }}" class="form-control">
+								<option value=""></option>
+								<option value=""></option>
+							</select>
+							<span class="has-error">{{ $errors->patient->first('hall') }}</span>
 						</div>
 					</div>
-					<div class="col-md-4">
-						<div class="form-group label-floating">
-							<label class="control-label">Country</label>
-							<input type="text" class="form-control">
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="form-group label-floating">
-							<label class="control-label">Postal Code</label>
-							<input type="text" class="form-control">
-						</div>
-					</div>
-				</div>
-				<div class="row">
 					<div class="col-md-4">
 						<div class="form-group label-floating">
 							<label class="control-label">Department</label>
-							<select name="selecteddd" class="form-control">
-								<option value=""></otpion>
-								<option value="Emergency">Emergency</otpion>
-								<option value="Anaesthetics">Anaesthetics</otpion>
-								<option value="Cardiology">Cardiology</otpion>
-								<option value="Chaplaincy">Chaplaincy</otpion>
-								<option value="Critical care">Critical care</otpion>
+							<select name="department" value="{{ old('department') }}" class="form-control">
+								<option value=""></option>
+								<option value=""></option>
 							</select>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="form-group label-floating">
-							<label class="control-label">Room No</label>
-							<select name="selecteddd" class="form-control">
-								<option value=""></otpion>
-								<option value="Room 1">Room 1</otpion>
-								<option value="Room 2">Room 2</otpion>
-								<option value="Room 3">Room 3</otpion>
-								<option value="Room 4">Room 4</otpion>
-								<option value="Room 5">Room 5</otpion>
-							</select>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="form-group label-floating">
-							<label class="control-label">Country</label>
-							<input type="text" class="form-control">
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="form-group label-floating">
-							<label class="control-label">Postal Code</label>
-							<input type="text" class="form-control">
+							<span class="has-error">{{ $errors->patient->first('department') }}</span>
 						</div>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-12">
-						<div class="form-group">
-							<label>About Me</label>
-							<div class="form-group label-floating">
-								<label class="control-label"> Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.</label>
-								<textarea class="form-control" rows="5"></textarea>
-							</div>
-						</div>
-					</div>
 				</div>
-				<button type="submit" class="btn btn-primary pull-right">Update Profile</button>
+				<button type="submit" class="btn btn-primary pull-right">Add Patient</button>
 				<div class="clearfix"></div>
 			</form>
 		</div>
