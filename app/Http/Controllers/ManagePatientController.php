@@ -294,7 +294,7 @@ class ManagePatientController extends Controller
 			//if valid
 			//send OTP
 			$otp	=	rand(1000,9999);
-			Twilio::message("+918219452232","Your HQMS One Time Password (OTP) is ".$otp);
+			//Twilio::message("+918219452232","Your HQMS One Time Password (OTP) is ".$otp);
 
 			$get_department	=	Departments::find($isDoctorValid->department_id); // get department
 			$get_doctor	=	Doctors::find($isDoctorValid->id); // get doctor
