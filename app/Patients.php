@@ -54,4 +54,14 @@ class Patients extends Model
                             ->count();
     }
 
+    public static function currentTokens($department_id, $doctor_id, $current_token){
+        $current_date   =  date('Y-m-d');
+        return Patients::where('department_id', $department_id)
+                            ->where('doctor_id', $doctor_id)
+                            ->where('queue_status', 0)
+                            ->where('token', $current_token)
+                            ->where('created_at', 'like', $current_date.'%')
+                            ->first();
+    }
+
 }
