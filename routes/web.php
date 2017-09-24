@@ -30,6 +30,8 @@ Route::get('/manage-patient/add', 'ManagePatientController@add')->name('home');
 Route::get('/manage-patient/get-doctors/{id}', 'ManagePatientController@getDoctorsByDepartment')->name('home');
 Route::post('/manage-patient/save', 'ManagePatientController@save');
 Route::get('/manage-patient/edit/{id}', 'ManagePatientController@edit');
+Route::post('/manage-patient/update', 'ManagePatientController@update');
+Route::get('/manage-patient/delete/{id}', 'ManagePatientController@delete');
 
 // Routing for the Manage Halls
 Route::get('/manage-hall','ManageHallController@index');

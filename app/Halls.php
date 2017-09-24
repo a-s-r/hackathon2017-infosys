@@ -11,7 +11,7 @@ class Halls extends Model
 	public $fillable = ['name','capacity'];
 	
 	public static function getAllHalls(){
-		$halls = DB::table('halls')->paginate(1);
+		$halls = DB::table('halls')->paginate(5);
 		return $halls;
 	}
 }

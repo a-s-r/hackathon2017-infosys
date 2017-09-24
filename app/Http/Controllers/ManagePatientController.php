@@ -38,7 +38,50 @@ class ManagePatientController extends Controller
 		$doctors = Doctors::all();
 		$halls = Halls::all();
 		$patients = Patients::find($id);
-		return view('ManagePatients.editPatient',['departments'=>$departments,'title'=>$title,'doctors'=>$doctors,'halls'=>$halls,'patients'=>$patients]);
+		$doctorsInfo = $this->getDoctorsByDepartmentInEdit($patients->department_id);
+		return view('ManagePatients.editPatient',['departments'=>$departments,'title'=>$title,'doctors'=>$doctors,'halls'=>$halls,'patients'=>$patients,'doctorsInfo'=>$doctorsInfo]);
+	}
+	
+	
+	public function update(Request $request){
+		$validator = Validator::make($request->all(), [
+            'name' => 'required|max:30',
+			'phone' => 'required|unique:patients|max:10',
+			'age' => 'required',
+			//'email' => 'required|email|unique:patients',
+			'hall' => 'required',
+			'department' => 'required',
+			'doctor' => 'required'
+        ]);
+		$patientId = $request->input('patient_id');
+       // if ($validator->fails()) {
+            //return redirect('manage-patient/edit/',$patientId)
+                       // ->withInput()->withErrors($validator,'patient');
+       // }
+		$patients = Patients::find($patientId);
+		$crno = $patients->crno;
+		$patient = new Patients;
+		$patient->name = $request->input('name');
+		$patient->phone = $request->input('phone');
+		$patient->email = $request->input('email');
+		$patient->hall_id = $request->input('hall');
+		$patient->department_id = $request->input('department');
+		$patient->doctor_id = $request->input('doctor');
+		$patient->age = $request->input('age');
+		$patient->address = $request->input('address');
+		$token = $this->createToken($request->input('doctor'),$request->input('department'));
+		$patient->token = $token;
+		$patient->crno = $crno;
+		$departments = Departments::find($request->input('department'));
+		$insert = $patient->save();
+		if($insert){
+			Twilio::message("+918219452232","You are registered successfully. Your token is ".$token.". CRNO is ".$crno.". You have to visit the Department ".$departments->name.". Floor ".$departments->floor." Hall No is ".$request->input('hall')." and Room no is. ".$departments->room_no);
+			$request->session()->flash('alert-success',"Patient Registration Form Saved Successfully");
+			return redirect('/manage-patient');
+		}else{
+			$request->session()->flash('alert-success',"Something going wrong. Please try again later.");
+			return redirect('/manage-patient');
+		}
 	}
 	
 	public function save(Request $request){
@@ -65,9 +108,11 @@ class ManagePatientController extends Controller
 		$patient->doctor_id = $request->input('doctor');
 		$patient->age = $request->input('age');
 		$patient->address = $request->input('address');
+		$crno = time();
+		$patient->crno = $crno;
 		
 		$token = $this->createToken($request->input('doctor'),$request->input('department'));
-		$crno = time();
+		$patient->token = $token;
 		$insert = $patient->save();
 		if($insert){
 			Twilio::message("+918219452232","You are registered successfully. Your token is ".$token.". CRNO is ".$crno."");
@@ -79,11 +124,23 @@ class ManagePatientController extends Controller
 		}	
 	}
 	
+	public function delete(Request $request,$id){
+		$patient = Patients::find($id);
+		$delete = $patient->delete();
+		if($delete){
+			$request->session()->flash('alert-success',"Patient Deleted Successfully");
+			return redirect('/manage-patient');
+		}else{
+			$request->session()->flash('alert-success',"Something going wrong. Please try again later.");
+			return redirect('/manage-patient');
+		}
+	}
+	
 	private function createToken($token,$departmentId){
 		// Get the Last Number of the token created in the database for the particular doctor
 		$tokensInfo = Patients::getInfoOfToken($token,$departmentId);
-		if(!empty($tokensInfo) && !empty($tokenInfo[0]['token'])){
-			$token = $token+1;
+		if(!empty($tokensInfo) && !empty($tokensInfo[0]->token)){
+			$token = $tokensInfo[0]->token +1;
 		}else{
 			$token = 1;
 		}
@@ -96,6 +153,15 @@ class ManagePatientController extends Controller
 			echo json_encode(['status' => true, 'data' => $data]);
 		}else{
 			return response()->json(['status' => false]);
+		}
+	}
+	
+	public function getDoctorsByDepartmentInEdit($id){
+		$data = Doctors::where('department_id', '=', $id)->get();
+		if($data){
+			return $data;
+		}else{
+			return false;
 		}
 	}
 
