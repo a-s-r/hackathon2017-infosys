@@ -46,12 +46,13 @@
 							<td>{{ $patient->patient_register_date }}</td>
 							<td>
 								<a title="Re-Visit" href="/manage-patient/edit/{{ $patient->pid }}"><i class="fa fa-repeat" aria-hidden="true"></i></a>
-								&nbsp; &nbsp;<a href="/manage-patient/delete/{{ $patient->pid }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+								&nbsp; &nbsp;<a onclick="return confirm('Are you sure want to delete?');" href="/manage-patient/delete/{{ $patient->pid }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
 							</td>
 						</tr>
 					@endforeach
 					</tbody>
 				</table>
+				{!! $patients->render() !!}
 			</div>
 		</div>
 	</div>

@@ -15,7 +15,8 @@ class Patients extends Model
 					->join('departments as b','a.department_id','=','b.id')
 					->join('doctors as c','a.doctor_id','=','c.id')
 					->select('a.id as pid','a.age','a.name as patient_name','a.phone as patient_phone','a.email as patient_email','a.crno','a.token','a.queue_status','a.device_id','a.created_at as patient_register_date','b.name as department_name','b.room_no','b.floor','c.name as doctors_name','c.phone as doctor_phone')
-					->get();
+					->orderBy('a.created_at','desc')
+					->paginate(5);
 		return $data;
 	}
 	
