@@ -83,7 +83,7 @@ class ManagePatientController extends Controller
 		if($insert){
 			$title = "HQMS";
 			$body = "You are registered successfully. Your token is ".$token.". CRNO is ".$crno.". You have to visit the Department ".$departments->name.". Floor ".$departments->floor." Hall No is ".$request->input('hall')." and Room no is. ".$departments->room_no;
-			Twilio::message($request->input('phone'),$body);
+			Twilio::message("+91".$request->input('phone'),$body);
 			if(!empty($deviceId)):
 				$this->sendNotification($title,$body,$deviceId);
 			endif;
@@ -126,7 +126,7 @@ class ManagePatientController extends Controller
 		$patient->token = $token;
 		$insert = $patient->save();
 		if($insert){
-			Twilio::message($request->input('phone'),"You are registered successfully. Your token is ".$token.". CRNO is ".$crno."");
+			Twilio::message("+91".$request->input('phone'),"You are registered successfully. Your token is ".$token.". CRNO is ".$crno."");
 			$request->session()->flash('alert-success',"Patient Registration Form Saved Successfully");
 			return redirect('/manage-patient');
 		}else{
