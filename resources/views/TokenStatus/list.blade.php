@@ -1,5 +1,9 @@
 @extends('layouts.qmlayout')
 @section('content')
+<style>
+	.addnew{float:right;color:#fff;font-size:25px;}
+	.text{float:right;font-size:20px;}
+</style>
 <div class="col-md-12">
 	<div class="card">
 		@if(Session::has('alert-success'))
@@ -15,44 +19,37 @@
 		@endif
 		<div class="card-content">
 			<div class="card-header" data-background-color="purple">
-				<h4 class="title">Token Status</h4>
-				<p class="category">Status</p>
+				<div class="row">
+					<div class="col-md-8">
+						<h4 class="title">Token Status</h4>
+						<p class="category">Status</p>
+					</div>
+					<div class="col-md-4">
+						<div class=""><a href="/token-status"><span class="text">Refresh <i class="fa fa-refresh"></i></span></a></div>
+					</div>
+				</div>
 			</div>
 			<div class="card-content table-responsive">
 				<table class="table">
 					<thead class="text-primary">
-						<th>Patient Name</th>
-						<th>Phone</th>
-						<th>Email</th>
-						<th>CR NO.</th>
-						<th>Token</th>
-						<th>Department <small>(Room,Floor)</small></th>
-						<th>Doctor Name</th>
-						<th>Doctor Phone No</th>
-						<th>Created Date</th>
-						<th>Action</th>
+						<th>Department</th>
+						<th>Doctor</th>
+						<th>Token Status</th>
+						<th>Total</th>
 					</thead>
 					<tbody>
-					@foreach($patients as $patient)
-						<tr>
-							<td>{{ ucwords($patient->patient_name) }}</td>
-							<td>{{ $patient->patient_phone }}</td>
-							<td>{{ $patient->patient_email }}</td>
-							<td>{{ $patient->crno }}</td>
-							<td>{{ $patient->token }}</td>
-							<td>{{ $patient->department_name }}, {{$patient->room_no}}, {{$patient->floor}}</td>
-							<td>{{ $patient->doctors_name }}</td>
-							<td>{{ $patient->doctor_phone }}</td>
-							<td>{{ $patient->patient_register_date }}</td>
-							<td>
-								<a title="Re-Visit" href="/manage-patient/edit/{{ $patient->pid }}"><i class="fa fa-repeat" aria-hidden="true"></i></a>
-								&nbsp; &nbsp;<a onclick="return confirm('Are you sure want to delete?');" href="/manage-patient/delete/{{ $patient->pid }}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-							</td>
-						</tr>
-					@endforeach
+					 @if(!empty($tokens))
+						@foreach($tokens as $token)
+							<tr>
+								<td>{{ $token['departmentName']}}</td>
+								<td>{{ $token['doctorName']}}</td>
+								<td>{{ $token['tokenStatus']}}</td>
+								<td>{{ $token['total']}}</td>
+							</tr>
+						@endforeach
+					@endif
 					</tbody>
 				</table>
-				{!! $patients->render() !!}
 			</div>
 		</div>
 	</div>

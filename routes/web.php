@@ -43,6 +43,10 @@ Route::get('/manage-hall/edit/{id}','ManageHallController@edit');
 Route::post('/manage-hall/update/','ManageHallController@update');
 Route::get('/manage-hall/delete/{id}','ManageHallController@deleteHall');
 
+//Manage Tokens
+
+Route::get('/token-status','TokenStatusController@index');
+
 /*
     API's
 */

@@ -21,10 +21,9 @@ class Patients extends Model
 	}
 	
 	public static function getAllDepartmentDoctors(){
-		$data = DB::table('patients as a')
-					->join('departments as b','a.department_id','=','b.id')
-					->join('doctors as c','a.doctor_id','=','c.id')
-					->orderBy('a.created_at','desc')
+		$data = DB::table('departments as b')
+					->join('doctors as c','b.id','=','c.id')
+					->select('b.id as department_id','c.id as doctor_id','b.name as department_name','b.room_no','b.floor','c.name as doctors_name','c.phone as doctor_phone')
 					->paginate(5);
 		return $data;
 	}

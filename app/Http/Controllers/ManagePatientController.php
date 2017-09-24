@@ -51,7 +51,7 @@ class ManagePatientController extends Controller
 	public function update(Request $request){
 		$validator = Validator::make($request->all(), [
             'name' => 'required|max:30',
-			'phone' => 'required|unique:patients|max:10',
+			'phone' => 'required|unique:patients|max:14',
 			'age' => 'required',
 			//'email' => 'required|email|unique:patients',
 			'hall' => 'required',
@@ -83,7 +83,7 @@ class ManagePatientController extends Controller
 		if($insert){
 			$title = "HQMS";
 			$body = "You are registered successfully. Your token is ".$token.". CRNO is ".$crno.". You have to visit the Department ".$departments->name.". Floor ".$departments->floor." Hall No is ".$request->input('hall')." and Room no is. ".$departments->room_no;
-			Twilio::message("+918219452232",$body);
+			Twilio::message($request->input('phone'),$body);
 			if(!empty($deviceId)):
 				$this->sendNotification($title,$body,$deviceId);
 			endif;
@@ -98,7 +98,7 @@ class ManagePatientController extends Controller
 	public function save(Request $request){
 		$validator = Validator::make($request->all(), [
             'name' => 'required|max:30',
-			'phone' => 'required|unique:patients|max:10',
+			'phone' => 'required|unique:patients|max:14',
 			'age' => 'required',
 			//'email' => 'required|email|unique:patients',
 			'hall' => 'required',
@@ -126,7 +126,7 @@ class ManagePatientController extends Controller
 		$patient->token = $token;
 		$insert = $patient->save();
 		if($insert){
-			Twilio::message("+918219452232","You are registered successfully. Your token is ".$token.". CRNO is ".$crno."");
+			Twilio::message($request->input('phone'),"You are registered successfully. Your token is ".$token.". CRNO is ".$crno."");
 			$request->session()->flash('alert-success',"Patient Registration Form Saved Successfully");
 			return redirect('/manage-patient');
 		}else{

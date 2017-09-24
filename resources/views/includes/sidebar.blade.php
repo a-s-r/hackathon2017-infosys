@@ -1,6 +1,6 @@
 <div class="sidebar" data-color="purple" data-image="../assets/img/sidebar-1.jpg">
             <div class="logo">
-                <a href="http://www.creative-tim.com" class="simple-text">
+                <a href="/home" class="simple-text">
                     HQMS
                 </a>
             </div>
@@ -40,6 +40,12 @@
                         <a href="/manage-hall/">
                             <i class="material-icons">unarchive</i>
                             <p>Manage Halls</p>
+                        </a>
+                    </li>
+					<li class="@if(Route::getCurrentRoute()->getActionName()=='App\Http\Controllers\TokenStatusController@index') active @endif">
+                        <a href="/token-status/">
+                            <i class="material-icons">unarchive</i>
+                            <p>Token Status</p>
                         </a>
                     </li>
                 </ul>
