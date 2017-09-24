@@ -20,6 +20,15 @@ class Patients extends Model
 		return $data;
 	}
 	
+	public static function getAllDepartmentDoctors(){
+		$data = DB::table('patients as a')
+					->join('departments as b','a.department_id','=','b.id')
+					->join('doctors as c','a.doctor_id','=','c.id')
+					->orderBy('a.created_at','desc')
+					->paginate(5);
+		return $data;
+	}
+	
 	public static function getInfoOfToken($doctorId,$departmentId){
 		$data = DB::select(DB::raw('SELECT * FROM patients where id=(select max(id) from patients where doctor_id='.$doctorId.' and department_id='.$departmentId.' and created_at like "%'.date('Y-m-d').'%")'));
 		return $data;

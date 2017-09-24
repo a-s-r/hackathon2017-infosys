@@ -1,5 +1,9 @@
 @extends('layouts.qmlayout')
 @section('content')
+<style>
+	.addnew{float:right;color:#fff;font-size:25px;}
+	.text{float:right;font-size:20px;}
+</style>
 <div class="col-md-12">
 	<div class="card">
 		@if(Session::has('alert-success'))
@@ -15,8 +19,13 @@
 		@endif
 		<div class="card-content">
 			<div class="card-header" data-background-color="purple">
-				<h4 class="title">Manage Halls</h4>
-				<p class="category">Halls List</p>
+				<div class="row"><div class="col-md-8">
+					<h4 class="title">Manage Halls</h4>
+					<p class="category">Halls List</p>
+				</div>
+				<div class="col-md-4">
+					<div class=""><a href="/manage-hall/add"><span class="text">Add Hall <i class="fa fa-plus"></i></span></a></div>
+				</div></div>
 			</div>
 			<div class="card-content table-responsive">
 				<table class="table">
