@@ -15,7 +15,7 @@ use Twilio;
 class ManagePatientController extends Controller
 {
 	public function __construct(){
-		$this->middleware('auth');
+		//$this->middleware('auth');
 	}
 	
     public function index(){
@@ -115,7 +115,7 @@ class ManagePatientController extends Controller
 		$active_tokens	=	Patients::activeTokens($department_id, $doctor_id);
 
 		//current token
-		$current_token	=	$active_tokens	+	1;
+		$current_token	=	($total==$active_tokens)? $active_tokens:$active_tokens	+	1;
 
 		//merge and return
 		$merge	=	['total'=>$total, 'active'=>$active_tokens, 'current'=>$current_token];
@@ -230,12 +230,13 @@ class ManagePatientController extends Controller
 			$otp	=	rand(1000,9999);
 			Twilio::message("+918219452232","Your HQMS One Time Password (OTP) is ".$otp);
 
-			//format data according to response
-			$get_department	=	Departments::find($isDoctorValid->department_id);
-			$get_doctor	=	Doctors::find($isDoctorValid->id);
+			$get_department	=	Departments::find($isDoctorValid->department_id); // get department
+			$get_doctor	=	Doctors::find($isDoctorValid->id); // get doctor
+			
 			//get token status
 			$tokenStatus	=	$this->allTokenStatus($isDoctorValid->department_id, $isDoctorValid->id);
 			
+			//format data according to response
 			$format	=	[
 				"status"	=>	true,
 				"otp"		=>	$otp,
@@ -249,17 +250,18 @@ class ManagePatientController extends Controller
 				]
 			];
 
-			dd($format);
+			// print final output
+			//dd($format);
+
 			//send response to device with required data
-			return response()->json(['status' => true, 'data' => []]);
+			return response()->json($format);
 		}
 		
 		
 	}
 
-	public function tokenStatus($doctor_phone){
-		/*
-		Default Json
+	/*
+		tokenStatus function API Default Json
 
 			{
 			"status": true,
@@ -267,24 +269,81 @@ class ManagePatientController extends Controller
 			"data": {
 				"patient": {
 					"name": "ABC",
-							"department": "Medicine",
-							"floor": 2,
-							"room_number": 45,
-							"doctor_name": "Dr. Summit Verma",
-							"phone": 9914466774,
-							"email": "hjhjhj@gmail.com",
-							"crno": 545454545,
-							"waiting_hall": "XZ",
-							"token": 5
+					"department": "Medicine",
+					"floor": 2,
+					"room_number": 45,
+					"doctor_name": "Dr. Summit Verma",
+					"phone": 9914466774,
+					"email": "hjhjhj@gmail.com",
+					"crno": 545454545,
+					"waiting_hall": "XZ",
+					"token": 5
 				},
 				"token":{
-				"status": 1,
-						"total": 10
+					"status": 1,
+					"total": 10
 				}
 			}
 			}
 
-		*/
-		return response()->json(['status' => true, 'data' => []]);
+	*/
+
+	public function tokenStatus($doctor_phone){
+		// get doctor phone number as request parameter
+		$isDoctorValid	=	Doctors::isDoctorValid($doctor_phone);
+		
+		if(!$isDoctorValid){
+			//if not valid
+			return response()->json(['status' => false, 'data' => []]);
+		}else{
+			//if valid
+			$otp	=	''; // set blank otp
+			
+			$get_department	=	Departments::find($isDoctorValid->department_id); // get department
+			$get_doctor	=	Doctors::find($isDoctorValid->id); // get doctor
+			
+			//get token status
+			$tokenStatus	=	$this->allTokenStatus($isDoctorValid->department_id, $isDoctorValid->id);
+			
+			// get current patient details
+			$currentTokens	=	Patients::currentTokens($isDoctorValid->department_id, $isDoctorValid->id, $tokenStatus['current']);
+
+			$patientArr	=	[]; // blank patient data arr - finally merge with format array
+			if($currentTokens){
+				$get_hall	=	Halls::find($currentTokens->hall_id);
+				// patient data format
+				$patientArr	=	[
+					"name" => $currentTokens->name,
+					"department" => $get_department->name,
+					"floor" => $get_department->floor,
+					"room_number" => $get_department->room_no,
+					"doctor_name" => $get_doctor->name,
+					"phone" => $currentTokens->phone,
+					"email" => $currentTokens->email,
+					"crno" => $currentTokens->crno,
+					"waiting_hall" => $get_hall->name,
+					"token" => $currentTokens->token
+				];
+			}
+
+			//format data according to response
+			$format	=	[
+				"status"	=>	true,
+				"otp"		=>	$otp,
+				"data"		=>	[
+					"patient" => $patientArr,
+					"token" => [
+						"status" => $tokenStatus['current'],
+						"total" => $tokenStatus['total']
+					]
+				]
+			];
+
+			// print final output
+			//dd($format);
+
+			//send response to device with required data
+			return response()->json($format);
+		}
 	}
 }
