@@ -40,6 +40,10 @@ class Patients extends Model
     public static function updateDeviceId($crno, $device_id){
         return Patients::where('crno', $crno)->update(['device_id' => $device_id]);
     }
+
+    public static function updateCurrentPatient($crno){
+        return Patients::where('crno', $crno)->update(['queue_status' => 1]);
+    }
     
     public static function isValidCrno($crno){
         return Patients::where('crno', $crno)->first();
@@ -70,6 +74,15 @@ class Patients extends Model
                             ->where('token', $current_token)
                             ->where('created_at', 'like', $current_date.'%')
                             ->first();
+    }
+
+    public static function isAvailable($department_id, $doctor_id, $token){
+        $current_date   =  date('Y-m-d');
+        return Patients::where('department_id', $department_id)
+                        ->where('doctor_id', $doctor_id)
+                        ->where('token', $token)
+                        ->where('created_at', 'like', $current_date.'%')
+                        ->first();
     }
 
 }

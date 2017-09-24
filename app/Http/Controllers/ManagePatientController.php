@@ -340,7 +340,7 @@ class ManagePatientController extends Controller
 			//if valid
 			//send OTP
 			$otp	=	rand(1000,9999);
-			Twilio::message("+918219452232","Your HQMS One Time Password (OTP) is ".$otp);
+			Twilio::message("+918219452232","Your HQMS One Time Password (OTP) is ".$otp."");
 
 			$get_department	=	Departments::find($isDoctorValid->department_id); // get department
 			$get_doctor	=	Doctors::find($isDoctorValid->id); // get doctor
@@ -436,6 +436,21 @@ class ManagePatientController extends Controller
 					"waiting_hall" => $get_hall->name,
 					"token" => $currentTokens->token
 				];
+
+				// Update current patient status
+				Patients::updateCurrentPatient($currentTokens->crno);
+				
+				$hall_capacity	=	$get_hall->capacity;
+				$patientAvailable=Patients::isAvailable($isDoctorValid->department_id, $isDoctorValid->id, $hall_capacity+$tokenStatus['current']);
+
+				if($patientAvailable){
+					$body	=	"Dear ".$patientAvailable->name.", Please approach to waiting area. Token no. ".$patientAvailable->token." CR No. ".$patientAvailable->crno." Thanks. PGI
+					";
+					$this->sendNotification('PGI : Your Turn', $body, $patientAvailable->device_id);
+
+					Twilio::message("+918219452232", $body);
+				}
+				//$this->sendNotification('Your Turn', 'Eligible for wait in waiting room',$registrationIds);
 			}
 
 			//format data according to response
@@ -452,7 +467,7 @@ class ManagePatientController extends Controller
 			];
 
 			// print final output
-			//dd($format);
+			//dd($currentTokens, $format);
 
 			//send response to device with required data
 			return response()->json($format);
