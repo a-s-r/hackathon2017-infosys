@@ -265,26 +265,62 @@ class ManagePatientController extends Controller
 			return response()->json($format);
 		}
 	}
+	
+	/*
+		isDoctorValid function api Default Json format
 
-	public function isDoctorValid($doctor_phone){
-		/*
-		Default Json
-
-			{
-				"status": true,
-				"otp": 1234,
-				"data": {
-					"name": "Dr.Summet Verma",
-					"phone": 9914477885,
-					"department": "Medicine",
-					"floor": 2,
-					"room_no": 45,
-					"token_total": 50
-				}
+		{
+			"status": true,
+			"otp": 1234,
+			"data": {
+				"name": "Dr.Summet Verma",
+				"phone": 9914477885,
+				"department": "Medicine",
+				"floor": 2,
+				"room_no": 45,
+				"token_total": 50
 			}
+		}
 
-		*/
-		return response()->json(['status' => true, 'data' => []]);
+	*/
+	public function isDoctorValid($doctor_phone){
+		// get doctor phone number as request parameter
+		$isDoctorValid	=	Doctors::isDoctorValid($doctor_phone);
+		
+		if(!$isDoctorValid){
+			//if not valid
+			return response()->json(['status' => false, 'data' => []]);
+		}else{
+			//if valid
+			//send OTP
+			$otp	=	rand(1000,9999);
+			Twilio::message("+918219452232","Your HQMS One Time Password (OTP) is ".$otp);
+
+			//format data according to response
+			$get_department	=	Departments::find($isDoctorValid->department_id);
+			$get_doctor	=	Doctors::find($isDoctorValid->id);
+			//get token status
+			$tokenStatus	=	$this->allTokenStatus($isDoctorValid->department_id, $isDoctorValid->id);
+			
+			$format	=	[
+				"status"	=>	true,
+				"otp"		=>	$otp,
+				"data"		=>	[
+					"name"	=>	$get_doctor->name,
+					"phone"	=>	$get_doctor->phone,
+					"department"	=>	$get_department->name,
+					"floor"	=>	$get_department->floor,
+					"room_no"	=>	$get_department->room_no,
+					"token_total"	=>	$tokenStatus['total']
+				]
+			];
+
+			dd($format);
+			//send response to device with required data
+			return response()->json(['status' => true, 'data' => []]);
+		}
+		
+		
 	}
 
 	public function tokenStatus($doctor_phone){
