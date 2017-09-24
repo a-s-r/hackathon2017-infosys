@@ -25,7 +25,7 @@ class CreatePatientsTable extends Migration
             $table->string('email')->nullable();
             $table->string('crno');
             $table->integer('token');
-            $table->integer('queue_status');
+            $table->integer('queue_status')->default(0);
             $table->longText('device_id')->nullable();
             $table->timestamps();
         });
