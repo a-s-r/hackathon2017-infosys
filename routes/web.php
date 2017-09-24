@@ -24,6 +24,7 @@ Route::get('/logout', function(){
 Auth::routes();
 
 Route::get('/home', 'ManagePatientController@index')->name('home');
+Route::get('/test', 'HomeController@myTest')->name('home');
 
 Route::get('/manage-patient', 'ManagePatientController@index')->name('home');
 Route::get('/manage-patient/add', 'ManagePatientController@add')->name('home');
@@ -32,6 +33,7 @@ Route::post('/manage-patient/save', 'ManagePatientController@save');
 Route::get('/manage-patient/edit/{id}', 'ManagePatientController@edit');
 Route::post('/manage-patient/update', 'ManagePatientController@update');
 Route::get('/manage-patient/delete/{id}', 'ManagePatientController@delete');
+Route::get('/manage-patient/fcm', 'ManagePatientController@fcm');
 
 // Routing for the Manage Halls
 Route::get('/manage-hall','ManageHallController@index');

@@ -11,6 +11,7 @@ use App\Halls;
 use App\Patients;
 use App\User;
 use Twilio;
+use Config;
 
 class ManagePatientController extends Controller
 {
@@ -60,6 +61,7 @@ class ManagePatientController extends Controller
        // }
 		$patients = Patients::find($patientId);
 		$crno = $patients->crno;
+		$deviceId = $patients->device_id;
 		$patient = new Patients;
 		$patient->name = $request->input('name');
 		$patient->phone = $request->input('phone');
@@ -75,7 +77,12 @@ class ManagePatientController extends Controller
 		$departments = Departments::find($request->input('department'));
 		$insert = $patient->save();
 		if($insert){
-			Twilio::message("+918219452232","You are registered successfully. Your token is ".$token.". CRNO is ".$crno.". You have to visit the Department ".$departments->name.". Floor ".$departments->floor." Hall No is ".$request->input('hall')." and Room no is. ".$departments->room_no);
+			$title = "HQMS";
+			$body = "You are registered successfully. Your token is ".$token.". CRNO is ".$crno.". You have to visit the Department ".$departments->name.". Floor ".$departments->floor." Hall No is ".$request->input('hall')." and Room no is. ".$departments->room_no;
+			Twilio::message("+918219452232",$body);
+			if(!empty($deviceId)):
+				$this->sendNotification($title,$body,$deviceId);
+			endif;
 			$request->session()->flash('alert-success',"Patient Registration Form Saved Successfully");
 			return redirect('/manage-patient');
 		}else{
@@ -122,6 +129,41 @@ class ManagePatientController extends Controller
 			$request->session()->flash('alert-success',"Something going wrong. Please try again later.");
 			return redirect('/manage-patient');
 		}	
+	}
+	
+	public function sendNotification($title,$body,$registrationIds){
+		#prep the bundle
+		 $msg = array
+			  (
+			'body' 	=> $body,
+			'title'	=> $title,
+					'icon'	=> 'myicon',/*Default Icon*/
+					'sound' => 'mySound'/*Default sound*/
+			  );
+		$fields = array
+				(
+					'to'		=> $registrationIds,
+					'notification'	=> $msg
+				);
+		
+		
+		$headers = array
+				(
+					'Authorization: key=' . Config::get('settings.API_ACCESS_KEY'),
+					'Content-Type: application/json'
+				);
+	#Send Reponse To FireBase Server	
+			$ch = curl_init();
+			curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+			curl_setopt( $ch,CURLOPT_POST, true );
+			curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+			curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+			curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+			curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+			$result = curl_exec($ch );
+			curl_close( $ch );
+		#Echo Result Of FireBase Server
+		return true;
 	}
 	
 	public function delete(Request $request,$id){
@@ -353,4 +395,5 @@ class ManagePatientController extends Controller
 		*/
 		return response()->json(['status' => true, 'data' => []]);
 	}
+	
 }
