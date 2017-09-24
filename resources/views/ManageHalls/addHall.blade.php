@@ -1,10 +1,21 @@
 @extends('layouts.qmlayout')
 @section('content')
+<style>
+	.addnew{float:right;color:#fff;font-size:25px;}
+	.text{float:right;font-size:20px;}
+</style>
 <div class="col-md-12">
 	<div class="card">		
 		<div class="card-header" data-background-color="purple">
-			<h4 class="title">Manage Hall</h4>
-			<p class="category">Add Hall Capacity</p>
+			<div class="row">
+				<div class="col-md-8">
+					<h4 class="title">Manage Halls</h4>
+					<p class="category">Add Hall Capacity</p>
+				</div>
+				<div class="col-md-4">
+					<div class=""><a href="/manage-hall"><span class="text">Manage List <i class="fa fa-angle-left"></i></span></a></div>
+				</div>
+			</div>
 		</div>
 		<div class="card-content">
 			<form name="managehall" method="post" action="/manage-hall/save">

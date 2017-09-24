@@ -43,6 +43,10 @@ class ManagePatientController extends Controller
 		return view('ManagePatients.editPatient',['departments'=>$departments,'title'=>$title,'doctors'=>$doctors,'halls'=>$halls,'patients'=>$patients,'doctorsInfo'=>$doctorsInfo]);
 	}
 	
+	public function tokensInfo(){
+		//$this->allTokenStatus
+	}
+	
 	
 	public function update(Request $request){
 		$validator = Validator::make($request->all(), [
