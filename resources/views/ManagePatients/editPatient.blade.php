@@ -10,7 +10,7 @@
 			<form name="addPatientForm" method="post" action="/manage-patient/update">
 				<div class="row">
 					{{ csrf_field() }}
-					<input type="text" name="patient_id" value="{{ $patients->id }}">
+					<input type="hidden" name="patient_id" value="{{ $patients->id }}">
 					<div class="col-md-4">
 						<div class="form-group label-floating">
 							<label class="control-label">Patient Name</label>

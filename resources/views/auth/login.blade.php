@@ -5,6 +5,9 @@
 		float: none !important;
 		width: auto !important
 	}
+	.panel-heading {
+		padding: 26px 15px !important;
+	}
 	.panel-heading{background-color:#9c27b0 !important;color:#fff !important;font-weight:bold;}
 </style>
 @section('content')
